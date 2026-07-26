@@ -8,7 +8,8 @@ public record ProductCreatedEvent(
     String sku,
     String name,
     String description,
-    BigDecimal price,
+    BigDecimal amount,
+    String currency,
     String status,
     String type) {
 }

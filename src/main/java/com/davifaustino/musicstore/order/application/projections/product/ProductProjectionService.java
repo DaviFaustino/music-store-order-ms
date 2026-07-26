@@ -18,7 +18,8 @@ public class ProductProjectionService {
             new ProductProjectionDto(
                 productCreatedEvent.productId(),
                 productCreatedEvent.name(),
-                productCreatedEvent.price(),
+                productCreatedEvent.amount(),
+                productCreatedEvent.currency(),
                 productCreatedEvent.status()
             )
         );

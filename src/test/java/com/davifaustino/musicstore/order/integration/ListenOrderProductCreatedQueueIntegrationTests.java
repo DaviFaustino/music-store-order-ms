@@ -44,7 +44,7 @@ public class ListenOrderProductCreatedQueueIntegrationTests extends IntegrationT
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.PRODUCT_CREATED_QUEUE_NAME,
-                productCreatedEvent(eventId, correlationId, productId, "Kind of Blue", "39.90", "ACTIVE")
+                productCreatedEvent(eventId, correlationId, productId, "Kind of Blue", "39.90", "USD", "ACTIVE")
         );
 
         awaitAssertion(() -> {
@@ -54,7 +54,8 @@ public class ListenOrderProductCreatedQueueIntegrationTests extends IntegrationT
             assertThat(projection).isPresent();
             assertThat(projection.get().getProductId()).isEqualTo(productId);
             assertThat(projection.get().getName()).isEqualTo("Kind of Blue");
-            assertThat(projection.get().getPrice()).isEqualByComparingTo(new BigDecimal("39.90"));
+            assertThat(projection.get().getAmount()).isEqualByComparingTo(new BigDecimal("39.90"));
+            assertThat(projection.get().getCurrency()).isEqualTo("USD");
             assertThat(projection.get().getStatus()).isEqualTo("ACTIVE");
         });
     }
@@ -68,7 +69,7 @@ public class ListenOrderProductCreatedQueueIntegrationTests extends IntegrationT
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.PRODUCT_CREATED_QUEUE_NAME,
-                productCreatedEvent(eventId, correlationId, firstProductId, "Blue Train", "49.90", "ACTIVE")
+                productCreatedEvent(eventId, correlationId, firstProductId, "Blue Train", "49.90", "USD", "ACTIVE")
         );
 
         awaitAssertion(() -> {
@@ -78,7 +79,7 @@ public class ListenOrderProductCreatedQueueIntegrationTests extends IntegrationT
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.PRODUCT_CREATED_QUEUE_NAME,
-                productCreatedEvent(eventId, correlationId, duplicateProductId, "Duplicate", "9.90", "INACTIVE")
+                productCreatedEvent(eventId, correlationId, duplicateProductId, "Duplicate", "9.90", "USD", "INACTIVE")
         );
 
         awaitAssertion(() -> assertThat(queueMessageCount()).isZero());
@@ -94,7 +95,8 @@ public class ListenOrderProductCreatedQueueIntegrationTests extends IntegrationT
             UUID correlationId,
             UUID productId,
             String name,
-            String price,
+            String amount,
+            String currency,
             String status
     ) {
         return new EventDto(
@@ -102,16 +104,17 @@ public class ListenOrderProductCreatedQueueIntegrationTests extends IntegrationT
                 correlationId,
                 "PRODUCT_CREATED",
                 """
-                        {
-                          "productId": "%s",
-                          "sku": "SKU-%s",
-                          "name": "%s",
-                          "description": "Integration test product",
-                          "price": %s,
-                          "status": "%s",
-                          "type": "VINYL"
-                        }
-                        """.formatted(productId, productId.toString().substring(0, 8), name, price, status)
+                {
+                    "productId": "%s",
+                    "sku": "SKU-%s",
+                    "name": "%s",
+                    "description": "Integration test product",
+                    "amount": %s,
+                    "currency": "%s",
+                    "status": "%s",
+                    "type": "VINYL"
+                }
+                """.formatted(productId, productId.toString().substring(0, 8), name, amount, currency, status)
         );
     }
 

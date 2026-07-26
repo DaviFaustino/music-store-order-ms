@@ -19,6 +19,7 @@ public class ProductProjectionEntity {
     @Id
     private UUID productId;
     private String name;
-    private BigDecimal price;
+    private BigDecimal amount;
+    private String currency;
     private String status;
 }

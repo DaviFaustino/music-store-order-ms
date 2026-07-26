@@ -10,7 +10,8 @@ public class ProductProjectionMapper {
         return new ProductProjectionEntity(
                 productProjectionDto.productId(),
                 productProjectionDto.name(),
-                productProjectionDto.price(),
+                productProjectionDto.amount(),
+                productProjectionDto.currency(),
                 productProjectionDto.status()
         );
     }
@@ -19,7 +20,8 @@ public class ProductProjectionMapper {
         return new ProductProjectionDto(
                 productProjectionEntity.getProductId(),
                 productProjectionEntity.getName(),
-                productProjectionEntity.getPrice(),
+                productProjectionEntity.getAmount(),
+                productProjectionEntity.getCurrency(),
                 productProjectionEntity.getStatus()
         );
     }

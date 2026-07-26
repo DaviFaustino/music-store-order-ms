@@ -6,6 +6,7 @@ import java.util.UUID;
 public record ProductProjectionDto(
     UUID productId,
     String name,
-    BigDecimal price,
+    BigDecimal amount,
+    String currency,
     String status) {
 }
