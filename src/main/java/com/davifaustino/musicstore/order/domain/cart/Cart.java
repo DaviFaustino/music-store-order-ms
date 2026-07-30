@@ -14,8 +14,6 @@ public class Cart {
     private Instant createdAt;
     private Instant updatedAt;
 
-    public Cart() {}
-
     public Cart(UUID id, UUID userId, CartStatus status, List<CartItem> items, Instant createdAt, Instant updatedAt) {
 
         if (userId == null) {
@@ -41,6 +39,31 @@ public class Cart {
                 now,
                 now
         );
+    }
+
+    public void addItem(CartItem cartItem) {
+        if (cartItem == null) {
+            throw new IllegalArgumentException("Cart item is required");
+        }
+        if (cartItem.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
+        if (this.status != CartStatus.ACTIVE) {
+            throw new IllegalStateException("Cannot add items to a cart that is not active");
+        }
+
+        CartItem existingItem = items.stream()
+                .filter(item -> item.getProductId().equals(cartItem.getProductId()))
+                .findFirst()
+                .orElse(null);
+
+        if (existingItem != null) {
+            existingItem.increaseQuantity(cartItem.getQuantity());
+        } else {
+            items.add(cartItem);
+        }
+
+        this.updatedAt = Instant.now();
     }
 
     public UUID getId() {
