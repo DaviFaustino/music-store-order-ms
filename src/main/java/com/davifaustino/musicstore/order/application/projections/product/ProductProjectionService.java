@@ -1,5 +1,8 @@
 package com.davifaustino.musicstore.order.application.projections.product;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import com.davifaustino.musicstore.order.infrastructure.outbound.persistence.projections.product.ProductProjectionRepository;
@@ -23,5 +26,9 @@ public class ProductProjectionService {
                 productCreatedEvent.status()
             )
         );
+    }
+
+    public Optional<ProductProjectionDto> findById(UUID productId) {
+        return productProjectionRepository.findById(productId);
     }
 }
