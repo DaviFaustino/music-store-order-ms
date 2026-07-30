@@ -1,5 +1,6 @@
 package com.davifaustino.musicstore.order.infrastructure.outbound.persistence.cart;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -20,5 +21,10 @@ public class CartRepository {
     public UUID save(Cart cart) {
         CartEntity cartEntity = cartPersistenceMapper.toEntity(cart);
         return mongoCartRepository.save(cartEntity).getId();
+    }
+
+    public Optional<Cart> findById(UUID cartId) {
+        return mongoCartRepository.findById(cartId)
+                .map(cartPersistenceMapper::toDomain);
     }
 }
